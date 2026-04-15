@@ -322,6 +322,22 @@
       opacity: 0.4;
     }
 
+    .module-note {
+      padding: 0 24px 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .module-note a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .module-note a:hover {
+      text-decoration: underline;
+    }
+
     .module-check {
       display: flex;
       align-items: center;
@@ -475,7 +491,8 @@
         title: "Skills",
         desc: "Como usar a feature de Skills do Claude — o que são, como ativar e como aplicar em tarefas do dia a dia financeiro, com exemplos práticos de uso.",
         icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-        video: ""
+        video: "",
+        note: 'Ferramenta para ditar prompts mencionada: <a href="https://wisprflow.ai/" target="_blank" rel="noopener">Wispr Flow</a>'
       },
       {
         title: "Criando Documentos Word",
@@ -555,6 +572,7 @@
             </div>
             <div class="module-body">
               <div class="video-wrapper">${videoHTML}</div>
+              ${mod.note ? `<div class="module-note">${mod.note}</div>` : ''}
               <label class="module-check">
                 <input type="checkbox" ${checked} onchange="markComplete(${i}, this.checked)">
                 Marcar como concluído
