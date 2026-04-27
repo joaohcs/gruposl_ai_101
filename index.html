@@ -887,6 +887,7 @@
         title: "How family offices should think about AI in their operations and businesses",
         desc: "Discussão direcionada a family offices sobre como pensar IA dentro das operações e dos negócios do portfólio: onde gerar valor, como avaliar oportunidades e quais cuidados tomar na adoção.",
         video: "https://www.youtube.com/embed/ktET8-77_UQ",
+        thumb: "assets/family-office-thumb.jpg",
         topic: "Estratégia",
         lang: "en"
       },
@@ -991,7 +992,7 @@
       return match ? match[1] : null;
     }
 
-    function videoEmbed(url, title = '') {
+    function videoEmbed(url, title = '', customThumb = '') {
       if (!url) {
         return `<div class="video-container"><div class="video-placeholder">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -1003,9 +1004,11 @@
       }
       const ytId = getYouTubeId(url);
       if (ytId) {
+        const thumbSrc = customThumb || `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+        const ytIdAttr = customThumb ? '' : ` data-yt-id="${ytId}"`;
         return `
           <div class="video-container video-yt" data-yt-url="${url}" role="button" tabindex="0" aria-label="Reproduzir ${title || 'vídeo'}">
-            <img class="yt-thumb" data-yt-id="${ytId}" src="https://img.youtube.com/vi/${ytId}/maxresdefault.jpg" alt="${title || ''}" loading="lazy">
+            <img class="yt-thumb"${ytIdAttr} src="${thumbSrc}" alt="${title || ''}" loading="lazy">
             <button class="yt-play" aria-hidden="true">
               <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24L27 14v20" fill="white"/></svg>
             </button>
@@ -1081,7 +1084,7 @@
       const el = document.getElementById(containerId);
       el.innerHTML = items.map(item => `
         <article class="video-card">
-          ${videoEmbed(item.video, item.title)}
+          ${videoEmbed(item.video, item.title, item.thumb)}
           <div class="card-body">
             <h3 class="card-title">${item.title}</h3>
             <p class="card-desc">${item.desc}</p>
