@@ -62,18 +62,15 @@
     }
 
     .logo-left, .logo-right {
-      flex: 1;
       display: flex;
       align-items: center;
     }
 
     .logo-left {
-      justify-content: flex-end;
       padding-right: 24px;
     }
 
     .logo-right {
-      justify-content: flex-start;
       padding-left: 24px;
     }
 
@@ -699,6 +696,10 @@
         position: static;
         gap: 20px;
       }
+      .sidebar-hero {
+        align-items: center;
+        text-align: center;
+      }
       .tabs-nav {
         flex-direction: row;
         gap: 8px;
@@ -754,22 +755,29 @@
     /* Filter bar (tabs 2, 3, 4) */
     .filter-bar {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      gap: 10px;
       margin-bottom: 20px;
       padding-bottom: 16px;
       border-bottom: 1px solid var(--border);
       min-width: 0;
     }
 
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
     .filter-group-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-right: 4px;
+      min-width: 60px;
     }
 
     .filter-chip {
@@ -801,13 +809,6 @@
 
     .filter-chip.active:hover {
       color: #fff;
-    }
-
-    .filter-divider {
-      width: 1px;
-      height: 18px;
-      background: var(--border);
-      margin: 0 4px;
     }
 
     .filter-empty {
@@ -1303,25 +1304,29 @@
 
     function renderFilterBar(containerId, items, state) {
       const topics = uniqueTopics(items);
-      const chips = [];
-      // Topic filters
-      chips.push(`<span class="filter-group-label">Tópico</span>`);
-      chips.push(`<button class="filter-chip ${state.topic === 'all' ? 'active' : ''}" data-filter-type="topic" data-filter-value="all">Todos</button>`);
-      topics.forEach(t => {
-        chips.push(`<button class="filter-chip ${state.topic === t ? 'active' : ''}" data-filter-type="topic" data-filter-value="${t}">${t}</button>`);
-      });
-      chips.push(`<span class="filter-divider"></span>`);
-      // Language filters
-      chips.push(`<span class="filter-group-label">Idioma</span>`);
-      chips.push(`<button class="filter-chip ${state.lang === 'all' ? 'active' : ''}" data-filter-type="lang" data-filter-value="all">Todos</button>`);
-      chips.push(`<button class="filter-chip ${state.lang === 'pt' ? 'active' : ''}" data-filter-type="lang" data-filter-value="pt">🇧🇷 PT</button>`);
-      chips.push(`<button class="filter-chip ${state.lang === 'en' ? 'active' : ''}" data-filter-type="lang" data-filter-value="en">🇺🇸 EN</button>`);
-      // Watched toggle (videos only)
+      const groups = [];
+
+      // Topic group
+      const topicChips = [
+        `<button class="filter-chip ${state.topic === 'all' ? 'active' : ''}" data-filter-type="topic" data-filter-value="all">Todos</button>`,
+        ...topics.map(t => `<button class="filter-chip ${state.topic === t ? 'active' : ''}" data-filter-type="topic" data-filter-value="${t}">${t}</button>`)
+      ];
+      groups.push(`<div class="filter-group"><span class="filter-group-label">Tópico</span>${topicChips.join('')}</div>`);
+
+      // Language group
+      const langChips = [
+        `<button class="filter-chip ${state.lang === 'all' ? 'active' : ''}" data-filter-type="lang" data-filter-value="all">Todos</button>`,
+        `<button class="filter-chip ${state.lang === 'pt' ? 'active' : ''}" data-filter-type="lang" data-filter-value="pt">🇧🇷 PT</button>`,
+        `<button class="filter-chip ${state.lang === 'en' ? 'active' : ''}" data-filter-type="lang" data-filter-value="en">🇺🇸 EN</button>`
+      ];
+      groups.push(`<div class="filter-group"><span class="filter-group-label">Idioma</span>${langChips.join('')}</div>`);
+
+      // Watched group (videos only)
       if (state.hasWatched) {
-        chips.push(`<span class="filter-divider"></span>`);
-        chips.push(`<button class="filter-chip ${state.unwatched ? 'active' : ''}" data-filter-type="unwatched" data-filter-value="toggle">Não assistidos</button>`);
+        groups.push(`<div class="filter-group"><span class="filter-group-label">Status</span><button class="filter-chip ${state.unwatched ? 'active' : ''}" data-filter-type="unwatched" data-filter-value="toggle">Não assistidos</button></div>`);
       }
-      return `<div class="filter-bar" id="${containerId}-filters">${chips.join('')}</div>`;
+
+      return `<div class="filter-bar" id="${containerId}-filters">${groups.join('')}</div>`;
     }
 
     function ensureFilterBar(containerId, items, state) {
